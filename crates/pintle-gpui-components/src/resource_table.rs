@@ -22,8 +22,8 @@ impl<D: TableDelegate> ResourceTable<D> {
         }
     }
 
-    /// Pin caller-owned actions below the scrolling viewport. Reserves room so
-    /// the last row remains reachable, independently of horizontal scrolling.
+    /// Overlay caller-owned actions at the bottom of the unchanged viewport.
+    /// Rows scroll beneath the actions; no layout or scroll space is reserved.
     pub fn floating_actions(mut self, actions: impl IntoElement) -> Self {
         self.floating_actions = Some(actions.into_any_element());
         self
@@ -45,16 +45,22 @@ impl<D: TableDelegate> RenderOnce for ResourceTable<D> {
             .border_color(cx.theme().border)
             .rounded(px(8.))
             .child(
-                div().flex_1().min_h_0().min_w_0().child(
-                    DataTable::new(&self.state)
-                        .stripe(false)
-                        .bordered(false)
-                        .with_size(px(36.))
-                        .header_row_height(px(32.)),
-                ),
+                div()
+                    .id("resource-table-viewport")
+                    .test_support()
+                    .flex_1()
+                    .min_h_0()
+                    .min_w_0()
+                    .child(
+                        DataTable::new(&self.state)
+                            .stripe(false)
+                            .bordered(false)
+                            .with_size(px(36.))
+                            .header_row_height(px(32.)),
+                    ),
             )
             .when_some(self.floating_actions, |table, actions| {
-                table.child(div().h(px(72.)).flex_shrink_0()).child(
+                table.child(
                     div()
                         .absolute()
                         .bottom(px(12.))
@@ -94,6 +100,7 @@ impl RenderOnce for FloatingActionBar {
         div()
             .id("floating-action-bar")
             .test_support()
+            .occlude()
             .flex()
             .items_center()
             .h(px(48.))

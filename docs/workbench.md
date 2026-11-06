@@ -54,7 +54,10 @@ has no knowledge of Kubernetes types, fixtures, namespace rules or connections.
 For bulk controls, compose `FloatingActionBar::new(summary, actions, dismiss)` and
 pass it to `ResourceTable::floating_actions(...)`. All three slots are arbitrary
 caller-owned elements; the kit does not own selection, command IDs or mutations.
-The bar is 48px high, and the table reserves a 72px bottom region so the final row
-stays accessible. The actions remain centered in the pane when the table scrolls
-horizontally. Omit the optional slot to retain the ordinary table layout. Consumers
+The 48px bar overlays the table, centered 12px above its bottom edge. Showing or
+hiding it does not resize the viewport, reserve space or change scroll offsets.
+Rows scroll underneath it, including the final rows; dismiss the bar to reveal
+covered content. Only the bar blocks pointer input, while transparent space beside
+it remains interactive. The actions stay fixed during horizontal and vertical
+scrolling. Omit the optional slot to retain the ordinary table layout. Consumers
 should collapse long action lists into an upstream dropdown in narrow panes.

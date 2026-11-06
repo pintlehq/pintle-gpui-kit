@@ -34,7 +34,7 @@ CPU workloads are ignored in normal test runs. Coverage includes:
   fonts and caller-owned trailing decoration.
 - Resource-table/header composition using an independent delegate and caller
   slots, including 36px table rows, optional floating actions, caller callbacks
-  and dismissal without losing table content.
+  and dismissal without resizing the table viewport or moving its rows.
 - Editable-table validation, atomic edits/paste, stable selection keys,
   keyboard/pointer interaction, menus, shared split data and retained scroll state.
 - Optional terminal parser, native input, bounded history, resizing, process

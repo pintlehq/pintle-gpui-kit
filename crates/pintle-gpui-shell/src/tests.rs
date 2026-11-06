@@ -330,10 +330,14 @@ fn resource_table_floating_actions_accept_caller_controls(cx: &mut TestAppContex
         })
         .unwrap()
     });
+    let mut viewport = None;
+    let mut first_row = None;
     cx.update_window(handle, |_, window, cx| {
         window.render_frame(cx);
+        viewport = Some(window.find("resource-table-viewport").bounds());
+        first_row = Some(window.find(("consumer-row", 0usize)).bounds());
         let bar = window.find("floating-action-bar").bounds();
-        assert!(window.find(("consumer-row", 1usize)).bounds().bottom() < bar.top());
+        assert_eq!(bar.bottom(), viewport.unwrap().bottom() - px(12.));
         window.click("consumer-bulk-action", cx);
         assert_eq!(consumer.read(cx).activations, 1);
         window.click("consumer-bulk-dismiss", cx);
@@ -342,6 +346,14 @@ fn resource_table_floating_actions_accept_caller_controls(cx: &mut TestAppContex
     cx.update_window(handle, |_, window, cx| {
         window.render_frame(cx);
         assert!(window.find_all("floating-action-bar").is_empty());
+        assert_eq!(
+            window.find("resource-table-viewport").bounds(),
+            viewport.unwrap()
+        );
+        assert_eq!(
+            window.find(("consumer-row", 0usize)).bounds(),
+            first_row.unwrap()
+        );
         assert!(window.find(("consumer-row", 1usize)).visible());
     })
     .unwrap();
