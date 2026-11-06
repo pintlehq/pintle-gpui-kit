@@ -1,0 +1,16 @@
+[package]
+name = "pintle-gpui-starter"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+license = "Apache-2.0"
+publish = false
+
+[dependencies]
+pintle-gpui-kit = { path = "../../crates/pintle-gpui-kit", version = "0.1.0", features = ["shell", "assets"] }
+
+[dev-dependencies]
+gpui-kit = { version = "=0.8.1", default-features = false, features = ["test-support", "component", "assets"] }
+
+[lints.rust]
+unsafe_code = "forbid"

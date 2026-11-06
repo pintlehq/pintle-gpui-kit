@@ -1,0 +1,15 @@
+[package]
+name = "pintle-gpui-components"
+description = "Small reusable Pintle UI compositions"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+gpui-kit = { workspace = true, features = ["component"] }
+pintle-gpui-theme.workspace = true
+
+[lints]
+workspace = true

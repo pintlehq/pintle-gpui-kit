@@ -1,0 +1,19 @@
+[package]
+name = "pintle-gpui-shell"
+description = "Optional composable desktop layout for Pintle applications"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+gpui-kit = { workspace = true, features = ["component"] }
+pintle-gpui-theme.workspace = true
+pintle-gpui-components.workspace = true
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+gpui-kit = { workspace = true, features = ["test-support", "assets"] }

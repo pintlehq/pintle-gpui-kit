@@ -1,0 +1,17 @@
+[package]
+name = "pintle-gpui-gallery"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+pintle-gpui-kit = { workspace = true, features = ["shell", "assets", "terminal"] }
+
+[dev-dependencies]
+pintle-gpui-kit = { workspace = true, features = ["terminal-test-support"] }
+gpui-kit = { workspace = true, features = ["test-support", "component", "assets"] }
+
+[lints]
+workspace = true

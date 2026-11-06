@@ -1,0 +1,24 @@
+[workspace]
+members = ["crates/*", "examples/gallery", "examples/starter"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+license = "Apache-2.0"
+repository = "https://github.com/pintlehq/pintle-gpui-kit"
+
+[workspace.dependencies]
+gpui-kit = { version = "=0.8.1", default-features = false }
+pintle-gpui-kit = { path = "crates/pintle-gpui-kit", version = "0.1.0", default-features = false }
+pintle-gpui-theme = { path = "crates/pintle-gpui-theme", version = "0.1.0" }
+pintle-gpui-components = { path = "crates/pintle-gpui-components", version = "0.1.0" }
+pintle-gpui-shell = { path = "crates/pintle-gpui-shell", version = "0.1.0" }
+pintle-gpui-terminal = { path = "crates/pintle-gpui-terminal", version = "0.1.0" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[profile.dev]
+debug = "limited"

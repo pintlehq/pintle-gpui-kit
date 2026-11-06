@@ -1,0 +1,17 @@
+[package]
+name = "pintle-gpui-theme"
+description = "Neutral Pintle themes and design tokens for GPUI Kit"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+gpui-kit = { workspace = true, features = ["component"] }
+
+[dev-dependencies]
+gpui-kit = { workspace = true, features = ["component", "test-support"] }
+
+[lints]
+workspace = true

@@ -1,0 +1,27 @@
+[package]
+name = "pintle-gpui-kit"
+description = "Composable GPUI foundation for Pintle desktop applications"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["theme", "components"]
+theme = ["dep:pintle-gpui-theme"]
+components = ["theme", "dep:pintle-gpui-components"]
+shell = ["components", "dep:pintle-gpui-shell"]
+terminal = ["theme", "dep:pintle-gpui-terminal"]
+terminal-test-support = ["terminal", "pintle-gpui-terminal/test-support"]
+assets = ["gpui-kit/assets"]
+
+[dependencies]
+gpui-kit.workspace = true
+pintle-gpui-theme = { workspace = true, optional = true }
+pintle-gpui-components = { workspace = true, optional = true }
+pintle-gpui-shell = { workspace = true, optional = true }
+pintle-gpui-terminal = { workspace = true, optional = true }
+
+[lints]
+workspace = true

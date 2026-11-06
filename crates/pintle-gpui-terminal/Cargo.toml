@@ -1,0 +1,30 @@
+[package]
+name = "pintle-gpui-terminal"
+description = "Retained native PTY terminal views for Pintle applications"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+# Deterministic, process-free sessions for downstream UI tests.
+test-support = []
+
+[dependencies]
+gpui-kit = { workspace = true, features = ["component"] }
+pintle-gpui-theme.workspace = true
+alacritty_terminal = "=0.26.0"
+portable-pty = "=0.9.0"
+async-channel = "2"
+
+[target.'cfg(unix)'.dependencies]
+filedescriptor = "0.8.3"
+nix = { version = "0.28", features = ["signal", "process"] }
+
+[dev-dependencies]
+pintle-gpui-terminal = { path = ".", features = ["test-support"] }
+gpui-kit = { workspace = true, features = ["test-support", "component"] }
+
+[lints]
+workspace = true

@@ -1,0 +1,67 @@
+name: Rust
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo check --workspace --locked
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
+      - name: Check independent facade features
+        run: |
+          cargo check -p pintle-gpui-kit --no-default-features --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features theme --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features components --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features shell --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features assets --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features shell,assets --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features terminal --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features terminal,shell --locked
+          cargo check -p pintle-gpui-kit --all-features --locked
+          cargo check -p pintle-gpui-gallery --locked
+      - name: Documentation
+        env:
+          RUSTDOCFLAGS: -D warnings
+        run: cargo doc --workspace --no-deps --locked
+
+  desktop-terminal:
+    name: Terminal (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Linux native dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake pkg-config libfontconfig1-dev libfreetype6-dev libx11-xcb-dev libxcb1-dev libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev libvulkan-dev libegl1-mesa-dev mesa-vulkan-drivers xvfb xauth dbus-x11
+      - name: Install toolchain
+        run: rustup toolchain install 1.99.0 --profile minimal
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --workspace --locked
+      - run: cargo check -p pintle-gpui-kit --no-default-features --features terminal --locked
+      - run: cargo check -p pintle-gpui-kit --no-default-features --features terminal,shell --locked
+      - name: Terminal parser, UI and real PTY tests
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run -a dbus-run-session -- cargo test -p pintle-gpui-terminal --locked
+            xvfb-run -a dbus-run-session -- cargo test -p pintle-gpui-gallery --locked terminal_
+          else
+            cargo test -p pintle-gpui-terminal --locked
+            cargo test -p pintle-gpui-gallery --locked terminal_
+          fi
