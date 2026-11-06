@@ -50,3 +50,11 @@ scrolling and column resizing. This composition does not change `EditableTable`.
 
 Lightship demonstrates cluster-specific IDs and read-only resource tables. The kit
 has no knowledge of Kubernetes types, fixtures, namespace rules or connections.
+
+For bulk controls, compose `FloatingActionBar::new(summary, actions, dismiss)` and
+pass it to `ResourceTable::floating_actions(...)`. All three slots are arbitrary
+caller-owned elements; the kit does not own selection, command IDs or mutations.
+The bar is 48px high, and the table reserves a 72px bottom region so the final row
+stays accessible. The actions remain centered in the pane when the table scrolls
+horizontally. Omit the optional slot to retain the ordinary table layout. Consumers
+should collapse long action lists into an upstream dropdown in narrow panes.

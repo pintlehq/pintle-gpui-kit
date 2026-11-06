@@ -24,7 +24,7 @@ suite. Independent applications must also validate their own Git pin and lockfil
 
 ## Coverage
 
-The current suite contains 98 passing tests and two compiled doctests. Two manual
+The current suite contains 99 passing tests and two compiled doctests. Two manual
 CPU workloads are ignored in normal test runs. Coverage includes:
 
 - Workspace preview/permanent tabs, retained views, docking, splits and resizing.
@@ -33,7 +33,8 @@ CPU workloads are ignored in normal test runs. Coverage includes:
 - Navigation search/expansion restoration, initial expansion, custom row heights,
   fonts and caller-owned trailing decoration.
 - Resource-table/header composition using an independent delegate and caller
-  slots, including 36px table rows.
+  slots, including 36px table rows, optional floating actions, caller callbacks
+  and dismissal without losing table content.
 - Editable-table validation, atomic edits/paste, stable selection keys,
   keyboard/pointer interaction, menus, shared split data and retained scroll state.
 - Optional terminal parser, native input, bounded history, resizing, process

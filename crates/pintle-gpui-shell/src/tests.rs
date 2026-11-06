@@ -233,11 +233,15 @@ impl gpui::component::table::TableDelegate for ReadOnlyRows {
     }
 }
 struct ResourceConsumer {
+    floating: bool,
+    activations: usize,
     table: Entity<gpui::component::table::TableState<ReadOnlyRows>>,
 }
 impl Render for ResourceConsumer {
-    fn render(&mut self, _: &mut Window, _: &mut Context<Self>) -> impl IntoElement {
-        use pintle_gpui_components::resource_table::{ResourceListHeader, ResourceTable};
+    fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        use pintle_gpui_components::resource_table::{
+            FloatingActionBar, ResourceListHeader, ResourceTable,
+        };
         div()
             .size_full()
             .flex()
@@ -259,7 +263,25 @@ impl Render for ResourceConsumer {
                 div()
                     .flex_1()
                     .min_h_0()
-                    .child(ResourceTable::new(&self.table)),
+                    .child(
+                        ResourceTable::new(&self.table).when(self.floating, |table| {
+                            table.floating_actions(FloatingActionBar::new(
+                                "Custom selection",
+                                gpui::component::button::Button::new("consumer-bulk-action")
+                                    .label("Process")
+                                    .on_click(cx.listener(|this, _, _, cx| {
+                                        this.activations += 1;
+                                        cx.notify();
+                                    })),
+                                gpui::component::button::Button::new("consumer-bulk-dismiss")
+                                    .label("Dismiss")
+                                    .on_click(cx.listener(|this, _, _, cx| {
+                                        this.floating = false;
+                                        cx.notify();
+                                    })),
+                            ))
+                        }),
+                    ),
             )
     }
 }
@@ -270,6 +292,8 @@ fn resource_table_accepts_independent_delegate_and_header_slots(cx: &mut TestApp
         pintle_gpui_theme::install(Default::default(), cx);
         gpui::open_window(workbench::window_options(cx), cx, |window, cx| {
             cx.new(|cx| ResourceConsumer {
+                floating: false,
+                activations: 0,
                 table: cx
                     .new(|cx| gpui::component::table::TableState::new(ReadOnlyRows, window, cx)),
             })
@@ -287,6 +311,38 @@ fn resource_table_accepts_independent_delegate_and_header_slots(cx: &mut TestApp
         let first = window.find(("consumer-row", 0usize)).bounds();
         let second = window.find(("consumer-row", 1usize)).bounds();
         assert_eq!(second.origin.y - first.origin.y, px(36.));
+    })
+    .unwrap();
+}
+
+#[gpui_kit::test]
+fn resource_table_floating_actions_accept_caller_controls(cx: &mut TestAppContext) {
+    let (handle, consumer) = cx.update(|cx| {
+        gpui::init(cx);
+        pintle_gpui_theme::install(Default::default(), cx);
+        gpui::open_window(workbench::window_options(cx), cx, |window, cx| {
+            cx.new(|cx| ResourceConsumer {
+                floating: true,
+                activations: 0,
+                table: cx
+                    .new(|cx| gpui::component::table::TableState::new(ReadOnlyRows, window, cx)),
+            })
+        })
+        .unwrap()
+    });
+    cx.update_window(handle, |_, window, cx| {
+        window.render_frame(cx);
+        let bar = window.find("floating-action-bar").bounds();
+        assert!(window.find(("consumer-row", 1usize)).bounds().bottom() < bar.top());
+        window.click("consumer-bulk-action", cx);
+        assert_eq!(consumer.read(cx).activations, 1);
+        window.click("consumer-bulk-dismiss", cx);
+    })
+    .unwrap();
+    cx.update_window(handle, |_, window, cx| {
+        window.render_frame(cx);
+        assert!(window.find_all("floating-action-bar").is_empty());
+        assert!(window.find(("consumer-row", 1usize)).visible());
     })
     .unwrap();
 }
