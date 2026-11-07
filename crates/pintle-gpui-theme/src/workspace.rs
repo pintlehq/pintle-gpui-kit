@@ -31,7 +31,9 @@ pub(super) fn options() -> super::ThemeOptions {
         paint!("#e5e5e5", "#3f3f46"; input);
         paint!("#f4f4f5", "#242526"; muted, list_hover, table_hover, button_hover, button_secondary_hover, secondary_hover, skeleton, tab_bar_segmented);
         paint!("#f4f4f5", "#2b2b2b"; accent, secondary, button_secondary);
-        paint!("#e5e5e5", "#37373d"; selection, list_active, table_active, sidebar_accent, button_active, button_secondary_active, secondary_active, drop_target);
+        paint!("#e5e5e5", "#37373d"; list_active, table_active, sidebar_accent, button_active, button_secondary_active, secondary_active, drop_target);
+        // Text selection needs a chromatic cue distinct from row selection.
+        paint!("#005fb8", "#75b7ff"; selection);
         paint!("#005fb8", "#0078d4"; primary, button_primary, sidebar_primary, progress_bar, slider_bar, caret, link, list_active_border, table_active_border, drag_border);
         paint!("#ffffff", "#ffffff"; primary_foreground, button_primary_foreground, sidebar_primary_foreground);
         paint!("#005fb8", "#0078d4"; ring);

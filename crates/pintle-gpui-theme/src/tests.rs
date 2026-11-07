@@ -123,6 +123,9 @@ fn default_workspace_preset_preserves_gallery_identity() {
         let theme = resolve(&ThemeOptions::default(), mode);
         assert_eq!(theme.background, rgb(background).into());
         assert_eq!(theme.sidebar, rgb(sidebar).into());
+        assert!(theme.selection.s > 0.5);
+        assert_ne!(theme.selection, theme.table_active);
+        assert_ne!(theme.selection, theme.list_active);
         assert_eq!(theme.tab, rgb(tabs).into());
         assert_eq!(theme.font_size, px(13.));
         assert_eq!(theme.radius, px(6.));
