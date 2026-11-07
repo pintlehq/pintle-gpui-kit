@@ -28,6 +28,10 @@ jobs:
           cargo check -p pintle-gpui-kit --no-default-features --features shell,assets --locked
           cargo check -p pintle-gpui-kit --no-default-features --features terminal --locked
           cargo check -p pintle-gpui-kit --no-default-features --features terminal,shell --locked
+          cargo check -p pintle-gpui-kit --no-default-features --features tree-sitter-yaml --locked
+          cargo check -p pintle-gpui-kit --features shell,assets,tree-sitter-yaml --locked
+          cargo test -p pintle-gpui-kit --features tree-sitter-yaml --locked
+          cargo clippy -p pintle-gpui-kit --all-targets --features tree-sitter-yaml --locked -- -D warnings
           cargo check -p pintle-gpui-kit --all-features --locked
           cargo check -p pintle-gpui-gallery --locked
       - name: Documentation
@@ -55,6 +59,7 @@ jobs:
       - run: cargo check --workspace --locked
       - run: cargo check -p pintle-gpui-kit --no-default-features --features terminal --locked
       - run: cargo check -p pintle-gpui-kit --no-default-features --features terminal,shell --locked
+      - run: cargo check -p pintle-gpui-kit --no-default-features --features tree-sitter-yaml --locked
       - name: Terminal parser, UI and real PTY tests
         shell: bash
         run: |

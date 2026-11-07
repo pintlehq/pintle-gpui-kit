@@ -94,6 +94,16 @@ fn switching_modes_retains_overrides_and_synchronizes_base(cx: &mut TestAppConte
         ] {
             set_mode(mode, cx);
             let theme = Theme::global(cx);
+            assert_eq!(theme.highlight_theme.appearance, mode);
+            let expected_highlight = if mode.is_dark() {
+                gpui_kit::component::highlighter::HighlightTheme::default_dark()
+            } else {
+                gpui_kit::component::highlighter::HighlightTheme::default_light()
+            };
+            assert_eq!(
+                theme.highlight_theme.style("string"),
+                expected_highlight.style("string")
+            );
             assert_eq!(theme.primary, try_parse_color(hex).unwrap());
             assert_eq!(theme.tokens.primary.color, theme.primary);
             assert_eq!(theme.radius, px(radius));

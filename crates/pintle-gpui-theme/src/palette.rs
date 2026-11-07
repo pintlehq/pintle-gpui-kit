@@ -42,6 +42,16 @@ pub(super) fn config(mode: ThemeMode) -> ThemeConfig {
         radius_lg: Some(8),
         shadow: Some(false),
         colors,
+        // Upstream retains the previous highlight theme when this is omitted.
+        highlight: Some(if dark {
+            gpui_kit::component::highlighter::HighlightTheme::default_dark()
+                .style
+                .clone()
+        } else {
+            gpui_kit::component::highlighter::HighlightTheme::default_light()
+                .style
+                .clone()
+        }),
         ..Default::default()
     }
 }

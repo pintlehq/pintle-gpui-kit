@@ -15,6 +15,7 @@ shell = ["components", "dep:pintle-gpui-shell"]
 terminal = ["theme", "dep:pintle-gpui-terminal"]
 terminal-test-support = ["terminal", "pintle-gpui-terminal/test-support"]
 assets = ["gpui-kit/assets"]
+tree-sitter-yaml = ["components", "gpui-kit/tree-sitter-yaml"]
 
 [dependencies]
 gpui-kit.workspace = true

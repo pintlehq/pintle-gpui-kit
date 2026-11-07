@@ -69,6 +69,18 @@ For custom `IntoElement` derives, import the facade's Kit namespace as `gpui`.
 Kit's action derive additionally needs `use pintle_gpui_kit::kit as gpui_kit;` in the
 module containing `gpui::actions!`. These aliases require no direct GPUI dependency.
 
+## YAML syntax highlighting
+
+Enable the optional `tree-sitter-yaml` facade feature alongside your application's
+other features. It forwards to GPUI Kit 0.8.1's YAML grammar and highlighter;
+it is disabled by default, so consumers without source editors need no parser.
+Use `gpui::component::input::{Editor, EditorState}` and initialize the state with
+`EditorState::new(window, cx).language("yaml")`. The upstream editor supplies
+syntax colors from the active light/dark theme, line numbers and indent guides.
+For resource viewers, render `Editor::new(&state).readonly(true)` to keep text
+selectable and copyable while rejecting user edits. Applications own redaction
+and must discard sensitive buffers when hiding revealed data.
+
 ## Compatibility and tests
 
 Pintle GPUI Kit 0.1.0 targets exactly Kit 0.8.1 and its GPUI 0.3.10 snapshot. Commit your
