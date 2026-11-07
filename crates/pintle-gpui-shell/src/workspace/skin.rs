@@ -167,6 +167,16 @@ impl TabGroupRenderer for WorkspaceTabs {
                     (w.document(id, cx), w.is_preview(id, cx))
                 };
                 let icon = document.as_ref().and_then(|d| d.icon_path.clone());
+                let tooltip = document
+                    .as_ref()
+                    .map(|d| {
+                        if d.context.is_empty() {
+                            d.title.to_string()
+                        } else {
+                            format!("{} / {}", d.context, d.title)
+                        }
+                    })
+                    .unwrap_or_else(|| "Document".into());
                 let label = document.map(|d| d.title).unwrap_or("Document".into());
                 let close_focus = window
                     .use_keyed_state(("close-tab-focus", id.0.as_u64()), cx, |_, cx| {
@@ -200,10 +210,7 @@ impl TabGroupRenderer for WorkspaceTabs {
                 Tab::new()
                     .aria_label(label.clone())
                     .debug_selector(move || format!("workspace-tab-{}", id.0.as_u64()))
-                    .tooltip({
-                        let label = label.clone();
-                        move |w, cx| Tooltip::new(label.clone()).build(w, cx)
-                    })
+                    .tooltip(move |w, cx| Tooltip::new(tooltip.clone()).build(w, cx))
                     .min_w(px(96.))
                     .text_size(px(13.))
                     .prefix(
